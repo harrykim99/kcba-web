@@ -1,65 +1,71 @@
-import Image from "next/image";
+import MeetingCard, { MeetingRecord } from '@/components/MeetingCard';
+import MeetingContainer from '@/components/MeetingContainer';
+import { AlertCircle } from 'lucide-react';
+import { Suspense } from 'react';
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+// Next.js 캐싱 비활성화 (항상 최신 데이터를 긁어오도록 설정)
+export const revalidate = 0;
+
+export default async function Home() {
+  const apiUrl = process.env.NEXT_PUBLIC_GAS_API_URL;
+
+  if (!apiUrl || apiUrl.includes('여기에_주소를_넣으세요')) {
+    return (
+      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md shadow-sm">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <AlertCircle className="h-5 w-5 text-yellow-400" />
+          </div>
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-yellow-800">API 주소가 설정되지 않았습니다.</h3>
+            <div className="mt-2 text-sm text-yellow-700">
+              <p><code>.env.local</code> 파일을 열어 <code>NEXT_PUBLIC_GAS_API_URL</code> 값을 구글 앱스 스크립트 배포 주소로 변경해주세요.</p>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+    );
+  }
+
+  try {
+    // API 호출 (가상 캐시버스팅 쿼리 추가하여 완벽한 노캐싱 보장)
+    const res = await fetch(`${apiUrl}?timestamp=${new Date().getTime()}`, {
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`API 응답 오류: ${res.status}`);
+    }
+
+    const records: MeetingRecord[] = await res.json();
+
+    if (!records || records.length === 0) {
+      return (
+        <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-100">
+          <p className="text-gray-500 font-medium">등록된 회의 자료가 없습니다.</p>
+          <p className="text-sm text-gray-400 mt-2">구글 시트에서 새로운 회의 자료를 동기화해주세요.</p>
         </div>
-      </main>
-    </div>
-  );
+      );
+    }
+
+    return (
+      <div className="flex flex-col gap-2 relative">
+        <Suspense fallback={<div className="p-10 text-center text-gray-500">로딩 중...</div>}>
+          <MeetingContainer records={records} />
+        </Suspense>
+      </div>
+    );
+
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return (
+      <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+        <h3 className="text-sm font-medium text-red-800">데이터를 불러오는 중 오류가 발생했습니다.</h3>
+        <p className="mt-1 text-sm text-red-700">구글 배포 링크가 올바른지, 접근 권한이 "모든 사용자(Anyone)"로 되어 있는지 확인해주세요.</p>
+      </div>
+    );
+  }
 }
