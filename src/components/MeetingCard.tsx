@@ -88,17 +88,22 @@ export default function MeetingCard({ record, defaultOpen = false }: MeetingCard
             </div>
             <h3 className="text-gray-900 font-bold mb-2">복잡한 양식이 포함된 문서입니다</h3>
             <p className="text-gray-500 text-[14px] leading-relaxed mb-6 max-w-[280px]">
-              표나 이미지가 포함된 문서는 작은 화면에서 억지로 텍스트만 뽑아낼 경우 가독성이 크게 떨어집니다. 가장 완벽한 화질과 보존된 서식으로 보시려면 전체화면으로 열어주세요.
+              카카오톡 화면에서는 손가락 줌(확대)이 제한될 수 있습니다.<br/><br/>
+              <b>가장 완벽한 화질과 보존된 서식(확대 지원)으로 보시려면 아래 전용 버튼으로 열어주세요.</b>
             </p>
             <a 
               href={record.originalLink} 
               target="_blank" 
               rel="noreferrer"
-              className="flex items-center gap-2 bg-[#002664] text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-[#001b47] active:scale-[0.98] transition-all w-full justify-center"
+              className="flex items-center gap-2 bg-[#002664] text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-[#001b47] active:scale-[0.98] transition-all w-full justify-center mb-3"
             >
               <ExternalLink className="w-4 h-4" />
-              모바일 전체화면으로 원본 열기
+              스마트 브라우저로 열기 (권장)
             </a>
+            
+            <p className="text-xs text-gray-400 font-medium">
+              ※ 클릭 시 구글 드라이브 앱 또는 크롬/사파리가 열립니다.
+            </p>
           </div>
         )}
 
