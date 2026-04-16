@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import KakaoBrowserBlocker from '@/components/KakaoBrowserBlocker';
 
 export const metadata: Metadata = {
   title: 'KCBA 이사회 자료실',
@@ -21,19 +22,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              var userAgent = navigator.userAgent.toLowerCase();
-              if (userAgent.indexOf("kakaotalk") > -1) {
-                location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href);
-              }
-            `
-          }}
-        />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
       <body className="bg-gray-50 text-gray-900 font-sans antialiased">
+        <KakaoBrowserBlocker />
         <header className="bg-[#002664] text-white shadow-md sticky top-0 z-50">
           <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
             <h1 className="text-lg font-bold tracking-tight">KCBA 이사회 자료실</h1>
