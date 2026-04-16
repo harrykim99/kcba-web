@@ -5,6 +5,13 @@ import KakaoBrowserBlocker from '@/components/KakaoBrowserBlocker';
 export const metadata: Metadata = {
   title: 'KCBA 이사회 자료실',
   description: 'KCBA 이사회 회의록 및 공식 자료실입니다.',
+  manifest: '/manifest.json',
+  themeColor: '#002664',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'KCBA 자료실',
+  },
   openGraph: {
     title: 'KCBA 이사회 자료실',
     description: '최신 회의록 및 안건지 자료',
