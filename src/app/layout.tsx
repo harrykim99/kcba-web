@@ -3,7 +3,14 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'KCBA 이사회 자료실',
-  description: 'KCBA Board of Directors Meeting Minutes and Agendas',
+  description: 'KCBA 이사회 회의록 및 공식 자료실입니다.',
+  openGraph: {
+    title: 'KCBA 이사회 자료실',
+    description: '최신 회의록 및 안건지 자료',
+    siteName: 'KCBA Board Minutes',
+    locale: 'ko_KR',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
