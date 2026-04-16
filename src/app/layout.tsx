@@ -13,6 +13,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              var userAgent = navigator.userAgent.toLowerCase();
+              if (userAgent.indexOf("kakaotalk") > -1) {
+                location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href);
+              }
+            `
+          }}
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+      </head>
       <body className="bg-gray-50 text-gray-900 font-sans antialiased">
         <header className="bg-[#002664] text-white shadow-md sticky top-0 z-50">
           <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
