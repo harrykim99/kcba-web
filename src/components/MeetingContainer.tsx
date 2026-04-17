@@ -19,11 +19,12 @@ export default function MeetingContainer({ records }: MeetingContainerProps) {
       
       {records.map((record, index) => {
         const displayTitle = record.title ? record.title.replace(/\.(pdf|docx|doc)$/i, '') : '제목 없음';
+        const previewLink = record.originalLink ? record.originalLink.replace('/view', '/preview') : '#';
         
         return (
           <a
             key={index}
-            href={record.originalLink || '#'}
+            href={previewLink}
             target="_blank"
             rel="noreferrer"
             className="group bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex items-center gap-4 hover:shadow-md cursor-pointer active:scale-[0.99] transition-all block"
