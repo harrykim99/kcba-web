@@ -10,6 +10,7 @@ export default function KakaoBrowserBlocker() {
     const userAgent = navigator.userAgent.toLowerCase();
     if (userAgent.includes('kakaotalk')) {
       setIsKakao(true);
+      location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href);
     }
   }, []);
 
